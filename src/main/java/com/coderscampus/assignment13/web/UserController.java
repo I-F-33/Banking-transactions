@@ -65,4 +65,13 @@ public class UserController {
 		userService.delete(userId);
 		return "redirect:/users";
 	}
+	
+	@GetMapping("/users/{userId}/accounts/{accountId}")
+	public String displayUserAndAccount(ModelMap model, @PathVariable Long userId, @PathVariable Long accountId) {
+		User user = userService.findById(userId);
+		model.put("user", user);
+		model.put("accounts", user.getAccounts());
+		return "users/"+userId;
+	}
+	
 }
