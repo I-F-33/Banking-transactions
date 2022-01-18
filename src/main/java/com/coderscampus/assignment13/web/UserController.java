@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.coderscampus.assignment13.domain.Address;
 import com.coderscampus.assignment13.domain.User;
+import com.coderscampus.assignment13.service.AddressService;
 import com.coderscampus.assignment13.service.UserService;
 
 @Controller
@@ -18,29 +20,32 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private AddressService addressService;
 	
 	@GetMapping("/register")
 	public String getCreateUser (ModelMap model) {
 		
 		model.put("user", new User());
+		model.put("address", new Address());
 		
 		return "register";
 	}
 	
 	@PostMapping("/register")
-	public String postCreateUser (User user) {
+	public String postCreateUser (User user, Address address) {
 		System.out.println(user);
-		userService.saveUser(user);
+		userService.saveUser(user, address);
 		return "redirect:/register";
 	}
 	
 	@GetMapping("/users")
 	public String getAllUsers (ModelMap model) {
 		Set<User> users = userService.findAll();
-		
 		model.put("users", users);
 		if (users.size() == 1) {
 			model.put("user", users.iterator().next());
+			model.put("address", addressService.findUserAddress(users.iterator().next()));
 		}
 		
 		return "users";
@@ -55,8 +60,8 @@ public class UserController {
 	}
 	
 	@PostMapping("/users/{userId}")
-	public String postOneUser (User user) {
-		userService.saveUser(user);
+	public String postOneUser (User user, Address address) {
+		userService.saveUser(user, address);
 		return "redirect:/users/"+user.getUserId();
 	}
 	
