@@ -45,9 +45,19 @@ public class UserController {
 		model.put("users", users);
 		if (users.size() == 1) {
 			model.put("user", users.iterator().next());
-			model.put("address", addressService.findUserAddress(users.iterator().next()));
+			if(users.iterator().next().getAddress() == null) {
+				model.put("address", new Address());
+			} else {
+			Address userAddress = addressService.findUserAddress(users.iterator().next().getUserId());
+			model.put("address", userAddress);
+			}
 		}
-		
+		return "users";
+	}
+	
+	@PostMapping("/users")
+	public String postUpdateUser(User user, Address address) {
+		userService.saveUser(user, address);
 		return "users";
 	}
 	
@@ -56,6 +66,12 @@ public class UserController {
 		User user = userService.findById(userId);
 		model.put("users", Arrays.asList(user));
 		model.put("user", user);
+		if(user.getAddress() == null) {
+			model.put("address", new Address());
+		} else {
+		Address userAddress = addressService.findUserAddress(user.getUserId());
+		model.put("address", userAddress);
+		}		
 		return "users";
 	}
 	
