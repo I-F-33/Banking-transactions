@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.coderscampus.assignment13.domain.Account;
 import com.coderscampus.assignment13.domain.Address;
 import com.coderscampus.assignment13.domain.User;
 import com.coderscampus.assignment13.service.AddressService;
@@ -25,17 +26,15 @@ public class UserController {
 	
 	@GetMapping("/register")
 	public String getCreateUser (ModelMap model) {
-		
-		model.put("user", new User());
-		model.put("address", new Address());
+		model.put("user", new User());	
 		
 		return "register";
 	}
 	
 	@PostMapping("/register")
-	public String postCreateUser (User user, Address address) {
+	public String postCreateUser (User user) {
 		System.out.println(user);
-		userService.saveUser(user, address);
+		userService.saveUser(user);
 		return "redirect:/register";
 	}
 	
@@ -56,8 +55,10 @@ public class UserController {
 	}
 	
 	@PostMapping("/users")
-	public String postUpdateUser(User user, Address address) {
-		userService.saveUser(user, address);
+	public String postUpdateUser(User user, Address address, Account account) {
+		userService.saveUser(user);
+		userService.saveAddress(user, address);
+		userService.saveAccount(user, account);
 		return "users";
 	}
 	
@@ -69,15 +70,19 @@ public class UserController {
 		if(user.getAddress() == null) {
 			model.put("address", new Address());
 		} else {
-		Address userAddress = addressService.findUserAddress(user.getUserId());
-		model.put("address", userAddress);
-		}		
+			Address userAddress = addressService.findUserAddress(user.getUserId());
+			model.put("address", userAddress);
+		}
+		if (user.getAccounts() != null) {
+			model.put("accounts", user.getAccounts());
+		}
+		
 		return "users";
 	}
 	
 	@PostMapping("/users/{userId}")
-	public String postOneUser (User user, Address address) {
-		userService.saveUser(user, address);
+	public String postOneUser (User user, Address address, Account account) {
+		userService.saveUser(user);
 		return "redirect:/users/"+user.getUserId();
 	}
 	

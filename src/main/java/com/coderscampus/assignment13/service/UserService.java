@@ -54,8 +54,16 @@ public class UserService {
 		return userOpt.orElse(new User());
 	}
 
-	public User saveUser(User user, Address address, Account account) {
+	public User saveUser(User user) {
+		return userRepo.save(user);
+	}
+	
+	public User saveAccount(User user, Account account) {
 		accountService.saveAccountToUser(account, user);
+		return userRepo.save(user);
+	}
+	
+	public User saveAddress(User user, Address address) {
 		addressService.saveAddressToUser(address, user);
 		return userRepo.save(user);
 	}
