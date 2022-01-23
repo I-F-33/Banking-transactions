@@ -21,9 +21,9 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepo;
 	@Autowired
-	private AccountRepository accountRepo;
+	private AddressService addressService;
 	@Autowired
-	private AddressRepository addressRepo;
+	private AccountService accountService;
 	
 	public List<User> findByUsername(String username) {
 		return userRepo.findByUsername(username);
@@ -54,24 +54,9 @@ public class UserService {
 		return userOpt.orElse(new User());
 	}
 
-	public User saveUser(User user, Address address) {
-		if (user.getUserId() == null) {
-			Account checking = new Account();
-			checking.setAccountName("Checking Account");
-			checking.getUsers().add(user);
-			Account savings = new Account();
-			savings.setAccountName("Savings Account");
-			savings.getUsers().add(user);
-			
-			user.getAccounts().add(checking);
-			user.getAccounts().add(savings);
-			accountRepo.save(checking);
-			accountRepo.save(savings);
-			
-			address.setUser(user);
-			user.setAddress(address);
-			addressRepo.save(address);
-		}
+	public User saveUser(User user, Address address, Account account) {
+		accountService.saveAccountToUser(account, user);
+		addressService.saveAddressToUser(address, user);
 		return userRepo.save(user);
 	}
 
