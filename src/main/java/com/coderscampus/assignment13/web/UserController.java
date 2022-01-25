@@ -1,6 +1,7 @@
 package com.coderscampus.assignment13.web;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.coderscampus.assignment13.domain.Account;
 import com.coderscampus.assignment13.domain.Address;
 import com.coderscampus.assignment13.domain.User;
+import com.coderscampus.assignment13.service.AccountService;
 import com.coderscampus.assignment13.service.AddressService;
 import com.coderscampus.assignment13.service.UserService;
 
@@ -23,6 +25,8 @@ public class UserController {
 	private UserService userService;
 	@Autowired
 	private AddressService addressService;
+	@Autowired
+	private AccountService accountService;
 	
 	@GetMapping("/register")
 	public String getCreateUser (ModelMap model) {
@@ -76,7 +80,6 @@ public class UserController {
 		if (user.getAccounts() != null) {
 			model.put("accounts", user.getAccounts());
 		}
-		
 		return "users";
 	}
 	
@@ -93,11 +96,22 @@ public class UserController {
 	}
 	
 	@GetMapping("/users/{userId}/accounts/{accountId}")
-	public String displayUserAndAccount(ModelMap model, @PathVariable Long userId, @PathVariable Long accountId) {
+	public String displayUserAccount(ModelMap model, @PathVariable Long userId, @PathVariable Long accountId) {
 		User user = userService.findById(userId);
+		Account userAccount = accountService.fetchUserAccount(accountId);
 		model.put("user", user);
-		model.put("accounts", user.getAccounts());
-		return "users/"+userId;
+		model.put("account", userAccount);
+		return "account";
+	}
+	
+	@PostMapping("/users/{userId}/accounts")
+	public String createUserAccount (@PathVariable Long userId) {
+		User user = userService.findById(userId);
+		Account account = new Account();
+		account.setAccountName("Account #" + user.getAccounts().size()+1);
+		userService.saveAccount(user, account);
+		return "redirect:/users/{userId}";
+		
 	}
 	
 }

@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 import com.coderscampus.assignment13.domain.Account;
 import com.coderscampus.assignment13.domain.Address;
 import com.coderscampus.assignment13.domain.User;
-import com.coderscampus.assignment13.repository.AccountRepository;
-import com.coderscampus.assignment13.repository.AddressRepository;
 import com.coderscampus.assignment13.repository.UserRepository;
 
 @Service

@@ -1,13 +1,13 @@
 package com.coderscampus.assignment13.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.coderscampus.assignment13.domain.Account;
 import com.coderscampus.assignment13.domain.User;
 import com.coderscampus.assignment13.repository.AccountRepository;
 
+@Service
 public class AccountService {
 
 	@Autowired
@@ -17,5 +17,8 @@ public class AccountService {
 			account.getUsers().add(user);
 			user.getAccounts().add(account);
 			return accountRepo.save(account);
+	}
+	public Account fetchUserAccount(Long accountId) {
+		return accountRepo.getOne(accountId);
 	}
 }
