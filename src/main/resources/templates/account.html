@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org">
 	<head>
-		<title>th:text="${account.accountName}"</title>
+		<title th:text="${account.accountName}"> </title>
 	</head>
 	<body>
 		<h1>
@@ -15,5 +15,10 @@
 				<input type="submit" value="Save Account"/>
 			</div>
 		</form>
+		<div>
+			<a th:href="@{/users/{userId}(userId=${user.userId})}">
+				<span>Back</span>
+			</a>
+		</div>
 	</body>
 </html>

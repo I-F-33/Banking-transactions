@@ -12,13 +12,18 @@ public class AccountService {
 
 	@Autowired
 	AccountRepository accountRepo;
-	
+
 	public Account saveAccountToUser(Account account, User user) {
-			account.getUsers().add(user);
-			user.getAccounts().add(account);
-			return accountRepo.save(account);
+		account.getUsers().add(user);
+		user.getAccounts().add(account);
+		return accountRepo.save(account);
 	}
-	public Account fetchUserAccount(Long accountId) {
+
+	public Account fetchUserAccountById(Long accountId) {
 		return accountRepo.getOne(accountId);
+	}
+
+	public Account save(Account account) {
+		return accountRepo.save(account);
 	}
 }
